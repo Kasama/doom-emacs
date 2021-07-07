@@ -61,12 +61,30 @@
 (setq org-directory base-org-dir)
 (setq org-agenda-files (list (concat base-org-dir "/daily")))
 
+(defun gen-dailies-template (day)
+  "Generate a different thing for different days of the week"
+  (concat "#+title: %<%Y-%m-%d>\n"
+          "#+ROAM_TAGS:\n\n"
+          "* [[roam:Wildlife]] :work:\n"
+          "** todo [%]\n\n"
+          "** notes\n\n"
+          (if (string= day "Friday")
+              "* [[roam:Fandelver]] :personal:dnd:fandelver\n" ""
+              )
+          )
+  )
+
+
 (setq org-roam-dailies-capture-templates
-      '(("d" "default" entry
-         #'org-roam-capture--get-point
-         "* %?"
-         :file-name "daily/%<%Y-%m-%d>"
-         :head "#+title: %<%Y-%m-%d>\n#+ROAM_TAGS:\n\n* [[roam:Wildlife]] :work:\n** todo [%]\n\n** notes\n\n")))
+      (let ((head (gen-dailies-template (format-time-string "%A" (current-time)))))
+        `(("d" "default" entry
+           #'org-roam-capture--get-point
+           "* %?"
+           :file-name "daily/%<%Y-%m-%d>"
+           :head ,head))
+        )
+      )
+
 
 (setq org-agenda-start-day nil)
 
@@ -86,6 +104,38 @@
                            ((org-agenda-overriding-header "LOW")
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
                 (tags-todo "TODO=\"IDEA\""
+                           ((org-agenda-overriding-header "IDEAS")))
+                )))
+(add-to-list 'org-agenda-custom-commands
+             '("w" "Work Tasks (grouped by Priority)"
+
+               (
+                (agenda "" ((org-agenda-span 3)))
+                (tags-todo "PRIORITY={A}+work"
+                           ((org-agenda-overriding-header "HIGH")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "PRIORITY={B}+work"
+                           ((org-agenda-overriding-header "NORMAL")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "PRIORITY={C}+work"
+                           ((org-agenda-overriding-header "LOW")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "TODO=\"IDEA\"+work"
+                           ((org-agenda-overriding-header "IDEAS")))
+                )))
+(add-to-list 'org-agenda-custom-commands
+             '("d" "DnD Tasks (grouped by Priority)"
+               (
+                (tags-todo "PRIORITY={A}+dnd"
+                           ((org-agenda-overriding-header "HIGH")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "PRIORITY={B}+dnd"
+                           ((org-agenda-overriding-header "NORMAL")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "PRIORITY={C}+dnd"
+                           ((org-agenda-overriding-header "LOW")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "TODO=\"IDEA\"+dnd"
                            ((org-agenda-overriding-header "IDEAS")))
                 )))
 
