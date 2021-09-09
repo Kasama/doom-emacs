@@ -111,16 +111,16 @@
 
                (
                 (agenda "" ((org-agenda-span 3)))
-                (tags-todo "PRIORITY={A}+work"
+                (tags-todo "PRIORITY={A}+work-support"
                            ((org-agenda-overriding-header "HIGH")
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
-                (tags-todo "PRIORITY={B}+work"
+                (tags-todo "PRIORITY={B}+work-support"
                            ((org-agenda-overriding-header "NORMAL")
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
-                (tags-todo "PRIORITY={C}+work"
+                (tags-todo "PRIORITY={C}+work-support"
                            ((org-agenda-overriding-header "LOW")
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
-                (tags-todo "TODO=\"IDEA\"+work"
+                (tags-todo "TODO=\"IDEA\"+work-support"
                            ((org-agenda-overriding-header "IDEAS")))
                 )))
 (add-to-list 'org-agenda-custom-commands
@@ -137,6 +137,22 @@
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
                 (tags-todo "TODO=\"IDEA\"+dnd"
                            ((org-agenda-overriding-header "IDEAS")))
+                )))
+(add-to-list 'org-agenda-custom-commands
+             '("o" "Oncall tasks"
+               (
+                (agenda "" ((org-agenda-span 3)))
+                (tags-todo "PRIORITY={A}+oncall"
+                           ((org-agenda-overriding-header "INCIDENT")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "PRIORITY={B}+oncall"
+                           ((org-agenda-overriding-header "IMPROVEMENT")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "PRIORITY={C}+oncall"
+                           ((org-agenda-overriding-header "FALSE POSITIVE")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled 'todo '("WAITING" "DONE" "IDEA")))))
+                (tags-todo "TODO=\"DONE\"+oncall"
+                           ((org-agenda-overriding-header "DONE")))
                 )))
 
 ;; disable startup screen
